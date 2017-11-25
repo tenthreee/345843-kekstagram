@@ -1,5 +1,7 @@
 'use strict';
 
+var PICTURES_QUANTITY = 25;
+
 var COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -9,28 +11,15 @@ var COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
+var pictureTemplate = document.querySelector('#picture-template');
+var picturesList = document.querySelector('.pictures');
+var fragment = document.createDocumentFragment();
+var galleryOverlay = document.querySelector('.gallery-overlay');
+var pictures = [];
+
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
-
-var getRandomStat = function (stat) {
-  return stat[getRandomNumber(0, stat.length)];
-};
-
-var pictures = [];
-
-for (var i = 0; i < 25; i++) {
-  var pictureObj = {
-    url: 'photos/' + getRandomNumber(1, 25) + '.jpg',
-    likes: getRandomNumber(15, 200),
-    comments: getRandomStat(COMMENTS)
-  };
-
-  pictures[i] = pictureObj;
-}
-
-var pictureTemplate = document.querySelector('#picture-template');
-var picturesList = document.querySelector('.pictures');
 
 var renderPicture = function (picture) {
   var pictureElement = pictureTemplate.content.cloneNode(true);
@@ -42,23 +31,23 @@ var renderPicture = function (picture) {
   return pictureElement;
 };
 
-var fragment = document.createDocumentFragment();
+for (var i = 0; i < PICTURES_QUANTITY; i++) {
+  var pictureObj = {
+    url: 'photos/' + getRandomNumber(1, 25) + '.jpg',
+    likes: getRandomNumber(15, 200),
+    comments: COMMENTS[getRandomNumber(0, COMMENTS.length)] // Я понимаю, что это не совсем верно, но не знаю пока, как сделать правильно :\
+  };
 
-for (i = 0; i < pictures.length; i++) {
+  pictures[i] = pictureObj;
   fragment.appendChild(renderPicture(pictures[i]));
 }
-
-picturesList.appendChild(fragment);
-
-var galleryOverlay = document.querySelector('.gallery-overlay');
-galleryOverlay.classList.remove('hidden');
 
 var renderBigPicture = function (picture) {
   galleryOverlay.querySelector('.gallery-overlay-image').setAttribute('src', picture.url);
   galleryOverlay.querySelector('.likes-count').textContent = picture.likes;
-  galleryOverlay.querySelector('.comments-count').textContent = picture.comments.length;
+  galleryOverlay.querySelector('.comments-count').textContent = picture.comments.length; // Тут то же самое. Я понимаю, что у меня в итоге получается длина строки, а не количество комментов. И я не знаю, откуда брать количество комментов. В моей нынешней реализации коммент всегда один :\
 };
 
-var bigPicture = renderBigPicture(pictures[0]);
-
-galleryOverlay.appendChild(bigPicture);
+picturesList.appendChild(fragment);
+galleryOverlay.classList.remove('hidden');
+galleryOverlay.appendChild(renderBigPicture(pictures[0]));
