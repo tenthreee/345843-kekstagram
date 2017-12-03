@@ -16,7 +16,7 @@ var picturesList = document.querySelector('.pictures');
 var galleryOverlay = document.querySelector('.gallery-overlay');
 var galleyOverlayImage = galleryOverlay.querySelector('.gallery-overlay-image');
 var likesCount = galleryOverlay.querySelector('.likes-count');
-var commentsCount = galleryOverlay.querySelector('.comments-count')
+var commentsCount = galleryOverlay.querySelector('.comments-count');
 
 // Получаю случайное число
 var getRandomNumber = function (min, max) {
