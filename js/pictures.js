@@ -14,6 +14,9 @@ var SENTENCES = [
 var pictureTemplate = document.querySelector('#picture-template').content;
 var picturesList = document.querySelector('.pictures');
 var galleryOverlay = document.querySelector('.gallery-overlay');
+var galleyOverlayImage = galleryOverlay.querySelector('.gallery-overlay-image');
+var likesCount = galleryOverlay.querySelector('.likes-count');
+var commentsCount = galleryOverlay.querySelector('.comments-count')
 
 // Получаю случайное число
 var getRandomNumber = function (min, max) {
@@ -29,39 +32,27 @@ var swapElements = function (array, index1, index2) {
 
 // Перемешиваю массив
 var shuffleArray = function (array) {
-  for (var i = 0; i < array.length; i++) {
+  var newArray = array;
+
+  for (var i = 0; i < newArray.length; i++) {
     var randomIndex = Math.floor(Math.random() * i);
     swapElements(array, i, randomIndex);
-  }
-
-  return array;
-};
-
-// Из массива предложений создаю большой массив предложений ЗАЧЕМ :\
-var createCommentsArray = function (array) {
-  var newArray = [];
-
-  for (var i = 0; i < PICTURES_NUMBER; i++) {
-    newArray[i] = array[getRandomNumber(0, array.length - 1)];
   }
 
   return newArray;
 };
 
-// Создаю массив комментов для фоток
+// Создаю массив комментов
 var createComments = function () {
   var comments = [];
-  var sentences = shuffleArray(createCommentsArray(SENTENCES));
+  var sentences = shuffleArray(SENTENCES);
   var randomLength = getRandomNumber(1, PICTURES_NUMBER);
 
   for (var i = 0; i < randomLength; i++) {
     var length = getRandomNumber(1, 2);
 
-    if (length === 2) {
-      var randomIndex = getRandomNumber(0, sentences.length - 1);
-      comments[i] = sentences[i] + sentences[randomIndex];
-    } else {
-      comments[i] = sentences[i];
+    for (var j = 0; j < length; j++) {
+      comments[i] += sentences[j];
     }
   }
 
@@ -88,7 +79,7 @@ var createPictures = function () {
 var getPicture = function (picture) {
   var pictureElement = pictureTemplate.cloneNode(true);
 
-  pictureElement.querySelector('img').setAttribute('src', picture.url);
+  pictureElement.querySelector('img').src = picture.url;
   pictureElement.querySelector('.picture-likes').textContent = picture.likes;
   pictureElement.querySelector('.picture-comments').textContent = picture.comments.length;
 
@@ -97,9 +88,9 @@ var getPicture = function (picture) {
 
 // Заполняю и показываю оверлей
 var fillOverlay = function (picture) {
-  galleryOverlay.querySelector('.gallery-overlay-image').setAttribute('src', picture.url);
-  galleryOverlay.querySelector('.likes-count').textContent = picture.likes;
-  galleryOverlay.querySelector('.comments-count').textContent = picture.comments.length;
+  galleyOverlayImage.src = picture.url;
+  likesCount.textContent = picture.likes;
+  commentsCount.textContent = picture.comments.length;
 
   galleryOverlay.classList.remove('hidden');
 };
@@ -118,15 +109,3 @@ var renderPictures = function (array) {
 var pictures = createPictures();
 renderPictures(pictures);
 fillOverlay(pictures[0]);
-
-
-// Создаю массив чисел от min до max
-// var createArray = function (min, max) {
-//   var array = [];
-//
-//   for (var i = 0; i < max; i++) {
-//     array[i] = i + 1;
-//   }
-//
-//   return array;
-// };
