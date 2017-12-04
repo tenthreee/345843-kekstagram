@@ -30,22 +30,31 @@ var swapElements = function (array, index1, index2) {
   array[index2] = temporaryValue;
 };
 
-// Перемешиваю массив
-var shuffleArray = function (array) {
-  var newArray = array;
+// Делаю копию массива
+var copyArray = function (array) {
+  var newArray = [];
 
-  for (var i = 0; i < newArray.length; i++) {
-    var randomIndex = Math.floor(Math.random() * i);
-    swapElements(array, i, randomIndex);
+  for (var i = 0; i < array.length; i++) {
+    newArray[i] = array[i];
   }
 
   return newArray;
 };
 
+// Перемешиваю массив
+var shuffleArray = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    var randomIndex = Math.floor(Math.random() * i);
+    swapElements(array, i, randomIndex);
+  }
+
+  return array;
+};
+
 // Создаю массив комментов
 var createComments = function () {
   var comments = [];
-  var sentences = shuffleArray(SENTENCES);
+  var sentences = shuffleArray(copyArray(SENTENCES));
   var randomLength = getRandomNumber(1, PICTURES_NUMBER);
 
   for (var i = 0; i < randomLength; i++) {
