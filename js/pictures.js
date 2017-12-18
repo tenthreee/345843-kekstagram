@@ -11,6 +11,11 @@ var SENTENCES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
+var Keycode = {
+  ESC: 27,
+  ENTER: 13
+};
+
 var template = document.querySelector('#picture-template');
 var pictureTemplate = template.content.querySelector('.picture');
 var picturesList = document.querySelector('.pictures');
@@ -18,20 +23,21 @@ var galleryOverlay = document.querySelector('.gallery-overlay');
 var galleyOverlayImage = galleryOverlay.querySelector('.gallery-overlay-image');
 var likesCount = galleryOverlay.querySelector('.likes-count');
 var commentsCount = galleryOverlay.querySelector('.comments-count');
+var galleryOverlayClose = document.querySelector('.gallery-overlay-close');
 
-// Получаю случайное число
+// Получение случайного числа
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-// Делаю рокировочку
+// Перестановка двух элементов в массиве
 var swapElements = function (array, index1, index2) {
   var temporaryValue = array[index1];
   array[index1] = array[index2];
   array[index2] = temporaryValue;
 };
 
-// Делаю копию массива
+// Копирование массива
 var copyArray = function (array) {
   var newArray = [];
 
@@ -42,7 +48,7 @@ var copyArray = function (array) {
   return newArray;
 };
 
-// Перемешиваю массив
+// Перемешивание массива
 var shuffleArray = function (array) {
   for (var i = 0; i < array.length; i++) {
     var randomIndex = Math.floor(Math.random() * i);
@@ -52,7 +58,7 @@ var shuffleArray = function (array) {
   return array;
 };
 
-// Создаю массив комментов
+// Создание массива комментов
 var createComments = function () {
   var comments = [];
   var sentences = shuffleArray(copyArray(SENTENCES));
@@ -69,7 +75,7 @@ var createComments = function () {
   return comments;
 };
 
-// Создаю массив фоточек
+// Создание массива фоточек
 var createPictures = function () {
   var pictures = [];
 
@@ -85,7 +91,7 @@ var createPictures = function () {
   return shuffleArray(pictures);
 };
 
-// Создаю болванку для превьюшки
+// Создание болванки для превьюшки
 var getPicture = function (picture) {
   var pictureElement = pictureTemplate.cloneNode(true);
 
@@ -96,7 +102,7 @@ var getPicture = function (picture) {
   return pictureElement;
 };
 
-// Заполняю и показываю оверлей
+// Заполнение и показ оверлея
 var fillOverlay = function (picture) {
   galleyOverlayImage.src = picture.querySelector('img').getAttribute('src');
   likesCount.textContent = picture.querySelector('.picture-likes').textContent;
@@ -106,7 +112,7 @@ var fillOverlay = function (picture) {
   document.addEventListener('keydown', onGalleryOverlayCloseEscKeydown);
 };
 
-// Рисую фоточки
+// Отрисовывание фоточки
 var renderPictures = function (array) {
   var fragment = document.createDocumentFragment();
 
@@ -123,30 +129,21 @@ var renderPictures = function (array) {
   picturesList.appendChild(fragment);
 };
 
-var pictures = createPictures();
-renderPictures(pictures);
-
-
-// Сценарий взаимодействия пользователя с сайтом
-
-var Keycode = {
-  ESC: 27,
-  ENTER: 13
-};
-
-var galleryOverlayClose = document.querySelector('.gallery-overlay-close');
-
-// Закрываю оверлей
+// Закрытие оверлея
 var closeGalleryOverlay = function () {
   galleryOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onGalleryOverlayCloseEscKeydown);
 };
 
+// Закрытие оверлея эскейпом
 var onGalleryOverlayCloseEscKeydown = function (evt) {
   if (evt.keyCode === Keycode.ESC) {
     closeGalleryOverlay();
   }
 };
+
+var pictures = createPictures();
+renderPictures(pictures);
 
 galleryOverlayClose.addEventListener('click', function () {
   closeGalleryOverlay();
