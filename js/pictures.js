@@ -11,8 +11,8 @@ var SENTENCES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-var pictureTemplate = document.querySelector('#picture-template');
-var pictureNode = pictureTemplate.content.querySelector('.picture');
+var template = document.querySelector('#picture-template');
+var pictureTemplate = template.content.querySelector('.picture');
 var picturesList = document.querySelector('.pictures');
 var galleryOverlay = document.querySelector('.gallery-overlay');
 var galleyOverlayImage = galleryOverlay.querySelector('.gallery-overlay-image');
@@ -87,7 +87,7 @@ var createPictures = function () {
 
 // Создаю болванку для превьюшки
 var getPicture = function (picture) {
-  var pictureElement = pictureNode.cloneNode(true);
+  var pictureElement = pictureTemplate.cloneNode(true);
 
   pictureElement.querySelector('img').src = picture.url;
   pictureElement.querySelector('.picture-likes').textContent = picture.likes;
@@ -98,13 +98,9 @@ var getPicture = function (picture) {
 
 // Заполняю и показываю оверлей
 var fillOverlay = function (picture) {
-  var pictureImg = picture.querySelector('img');
-  var pictureCmt = picture.querySelector('.picture-comments');
-  var pictureLikes = picture.querySelector('.picture-likes');
-
-  galleyOverlayImage.src = pictureImg.getAttribute('src');
-  likesCount.textContent = pictureCmt.textContent;
-  commentsCount.textContent = pictureLikes.textContent;
+  galleyOverlayImage.src = picture.querySelector('img').getAttribute('src');
+  likesCount.textContent = picture.querySelector('.picture-likes').textContent;
+  commentsCount.textContent = picture.querySelector('.picture-comments').textContent;
 
   galleryOverlay.classList.remove('hidden');
   document.addEventListener('keydown', onGalleryOverlayCloseEscKeydown);
@@ -119,16 +115,12 @@ var renderPictures = function (array) {
 
     fragment.appendChild(currentPicture);
     currentPicture.addEventListener('click', function (evt) {
-      openGalleryOverlay(evt, evt.currentTarget);
+      evt.preventDefault();
+      fillOverlay(evt.currentTarget);
     });
   }
 
   picturesList.appendChild(fragment);
-};
-
-var openGalleryOverlay = function (evt, obj) {
-  evt.preventDefault();
-  fillOverlay(obj);
 };
 
 var pictures = createPictures();
